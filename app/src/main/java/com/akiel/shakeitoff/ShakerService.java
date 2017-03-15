@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.IBinder;
+import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.annotation.Nullable;
 import android.support.v7.app.NotificationCompat;
@@ -43,9 +44,12 @@ public class ShakerService extends Service  {
             @Override
             public void onShake() {
                 Toast.makeText(getApplicationContext(),"here",Toast.LENGTH_SHORT);
-                Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
-                v.vibrate(100);
-                mDevicePolicyManager.lockNow();
+                PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
+                if (pm.isScreenOn()) {
+                    Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
+                    v.vibrate(100);
+                    mDevicePolicyManager.lockNow();
+                }
             }
         });
 
