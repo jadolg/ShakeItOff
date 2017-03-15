@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ShakeItOff</string>
+    <string name="intro">shake your phone to lock</string>
+    <string name="noadmin">Not Registered as admin</string>
+</resources>

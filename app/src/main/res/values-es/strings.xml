@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ShakeItOff</string>
+    <string name="intro">agite su teléfono para bloquearlo</string>
+    <string name="noadmin">La aplicación no está registrada como Admin</string>
+</resources>
