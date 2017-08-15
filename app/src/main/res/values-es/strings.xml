@@ -2,4 +2,8 @@
     <string name="app_name">ShakeItOff</string>
     <string name="intro">agite su teléfono para bloquearlo</string>
     <string name="noadmin">La aplicación no está registrada como Admin</string>
+    <string name="cancel">Cancelar</string>
+    <string name="ok">Proceder</string>
+    <string name="confirm_admin">Necesito privilegios de administración</string>
+    <string name="confirm_admin_text">Para poder apagar la pantalla de su dispositivo esta aplicación necesita permisos de Administración de Dispositivo. Haciendo click en Proceder usted accede a conceder dicho permiso.</string>
 </resources>

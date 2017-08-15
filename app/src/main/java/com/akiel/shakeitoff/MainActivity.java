@@ -4,11 +4,13 @@ import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.PowerManager;
 import android.os.Vibrator;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,7 +27,7 @@ import com.joanzapata.iconify.fonts.FontAwesomeModule;
 public class MainActivity extends AppCompatActivity {
 
     private static final int ADMIN_INTENT = 15;
-    private static final String description = "Admin needed to lock your screen";
+    private static final String description = "Administration Permission needed to lock your screen";
     private DevicePolicyManager mDevicePolicyManager;
     private ComponentName mComponentName;
     private FloatingActionButton fab;
@@ -90,12 +92,33 @@ public class MainActivity extends AppCompatActivity {
             }
             setBtnStatus(isMyServiceRunning(getApplicationContext()));
         }else{
-            Toast.makeText(getApplicationContext(), getString(R.string.noadmin), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
-            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,description);
-            startActivityForResult(intent, ADMIN_INTENT);
+//            Toast.makeText(getApplicationContext(), getString(R.string.noadmin), Toast.LENGTH_SHORT).show();
+            showInstallAdminAlert();
         }
+    }
+
+    private void showInstallAdminAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage(getString(R.string.confirm_admin_text));
+        builder.setCancelable(true)
+                .setPositiveButton(getString(R.string.ok),
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
+                                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,description);
+                                startActivityForResult(intent, ADMIN_INTENT);
+                            }
+                        }).setNegativeButton(getString(R.string.cancel),
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        //hacer algo en el cancelar?
+                    }
+                });
+
+        AlertDialog alert = builder.create();
+        alert.setTitle(getString(R.string.confirm_admin));
+        alert.show();
     }
 
     @Override
