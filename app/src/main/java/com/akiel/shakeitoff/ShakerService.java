@@ -56,8 +56,9 @@ public class ShakerService extends Service  {
             }
         });
 
-//        return super.onStartCommand(intent, flags, startId);
-        notifyit();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            notifyit();
+        }
         return START_STICKY;
     }
 

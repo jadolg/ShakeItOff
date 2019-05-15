@@ -6,6 +6,7 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +14,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.Iconify;
+import com.joanzapata.iconify.fonts.FontAwesomeIcons;
+import com.joanzapata.iconify.fonts.FontAwesomeModule;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Iconify.with(new FontAwesomeModule());
         setContentView(R.layout.activity_main);
 
         getSupportActionBar().hide();
@@ -62,13 +69,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void setBtnStatus(Boolean status){
-//        IconDrawable icon = null;
-//        if (status) {
-//            icon = new IconDrawable(this, FontAwesomeIcons.fa_toggle_on);
-//        } else {
-//            icon = new IconDrawable(this, FontAwesomeIcons.fa_toggle_off);
-//        }
-//        fab.setImageDrawable(icon.color(Color.WHITE));
+        IconDrawable icon = null;
+        if (status) {
+            icon = new IconDrawable(this, FontAwesomeIcons.fa_toggle_on);
+        } else {
+            icon = new IconDrawable(this, FontAwesomeIcons.fa_toggle_off);
+        }
+        fab.setImageDrawable(icon.color(Color.WHITE));
     }
 
     public void onClick(View view){
