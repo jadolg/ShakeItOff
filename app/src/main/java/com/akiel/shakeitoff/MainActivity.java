@@ -6,15 +6,15 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.Toast;
-
-
 
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
     private DevicePolicyManager mDevicePolicyManager;
     private ComponentName mComponentName;
     private Switch aswitch;
+    private SeekBar seekbar;
+    private SharedPreferences preferences;
 
     public static boolean isMyServiceRunning(Context context) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
@@ -40,7 +42,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +51,31 @@ public class MainActivity extends AppCompatActivity {
         aswitch = (Switch) findViewById(R.id.switch2);
         aswitch.setChecked(isMyServiceRunning(getApplicationContext()));
 
-        mDevicePolicyManager = (DevicePolicyManager)getSystemService(
+        preferences = getSharedPreferences("shakeitoff", MODE_PRIVATE);
+        final SharedPreferences.Editor preferencesEditor = preferences.edit();
+
+        seekbar = (SeekBar) findViewById(R.id.seekBar);
+        seekbar.setProgress(preferences.getInt("sensitivity", 2));
+        seekbar.setEnabled(!isMyServiceRunning(getApplicationContext()));
+        seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                preferencesEditor.putInt("sensitivity", progress);
+                preferencesEditor.commit();
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
+
+        mDevicePolicyManager = (DevicePolicyManager) getSystemService(
                 Context.DEVICE_POLICY_SERVICE);
         mComponentName = new ComponentName(this, MyAdminReceiver.class);
     }
@@ -59,20 +84,22 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         aswitch.setChecked(isMyServiceRunning(getApplicationContext()));
+        seekbar.setEnabled(!isMyServiceRunning(getApplicationContext()));
     }
 
 
-    public void onClick(View view){
+    public void onClick(View view) {
         Log.i("main", "iniciando");
         boolean isAdmin = mDevicePolicyManager.isAdminActive(mComponentName);
         if (isAdmin) {
-            if (isMyServiceRunning(getApplicationContext())){
+            if (isMyServiceRunning(getApplicationContext())) {
                 stopService(new Intent(this, ShakerService.class));
             } else {
                 startService(new Intent(this, ShakerService.class));
             }
             aswitch.setChecked(isMyServiceRunning(getApplicationContext()));
-        }else{
+            seekbar.setEnabled(!isMyServiceRunning(getApplicationContext()));
+        } else {
             showInstallAdminAlert();
         }
     }
@@ -86,7 +113,7 @@ public class MainActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int id) {
                                 Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
                                 intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
-                                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION,description);
+                                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, description);
                                 startActivityForResult(intent, ADMIN_INTENT);
                             }
                         }).setNegativeButton(getString(R.string.cancel),
@@ -105,12 +132,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == ADMIN_INTENT) {
             if (resultCode == RESULT_OK) {
-                if (isMyServiceRunning(getApplicationContext())){
+                if (isMyServiceRunning(getApplicationContext())) {
                     stopService(new Intent(this, ShakerService.class));
                 } else {
                     startService(new Intent(this, ShakerService.class));
                 }
-            }else{
+            } else {
                 Toast.makeText(getApplicationContext(), getString(R.string.noadmin), Toast.LENGTH_SHORT).show();
             }
         }

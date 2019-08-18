@@ -3,6 +3,9 @@
     <string name="intro">shake your phone to lock</string>
     <string name="noadmin">Not Registered as admin</string>
     <string name="cancel">Cancel</string>
+    <string name="low">Low</string>
+    <string name="high">High</string>
+    <string name="sensitivity">Sensitivity</string>
     <string name="ok">Proceed</string>
     <string name="confirm_admin">Need admin privileges</string>
     <string name="confirm_admin_text">In order to be able to turn off the screen of your device this application needs Device Administration permissions. By clicking proceed you agree to grant this permissions.</string>
