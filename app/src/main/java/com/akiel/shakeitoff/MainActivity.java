@@ -16,6 +16,8 @@ import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import java.util.Objects;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -46,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        getSupportActionBar().hide();
+        Objects.requireNonNull(getSupportActionBar()).hide();
 
         aswitch = (Switch) findViewById(R.id.switch2);
         aswitch.setChecked(isMyServiceRunning(getApplicationContext()));
@@ -61,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
                 preferencesEditor.putInt("sensitivity", progress);
-                preferencesEditor.commit();
+                preferencesEditor.apply();
             }
 
             @Override
@@ -91,14 +93,21 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         Log.i("main", "iniciando");
         boolean isAdmin = mDevicePolicyManager.isAdminActive(mComponentName);
+        preferences = getSharedPreferences("shakeitoff", MODE_PRIVATE);
+        final SharedPreferences.Editor preferencesEditor = preferences.edit();
+
         if (isAdmin) {
             if (isMyServiceRunning(getApplicationContext())) {
                 stopService(new Intent(this, ShakerService.class));
             } else {
                 startService(new Intent(this, ShakerService.class));
             }
-            aswitch.setChecked(isMyServiceRunning(getApplicationContext()));
-            seekbar.setEnabled(!isMyServiceRunning(getApplicationContext()));
+            boolean serviceRunning = isMyServiceRunning(getApplicationContext());
+            preferencesEditor.putBoolean("enabled", serviceRunning);
+            preferencesEditor.apply();
+            Log.i("main", "saved state "+serviceRunning);
+            aswitch.setChecked(serviceRunning);
+            seekbar.setEnabled(!serviceRunning);
         } else {
             showInstallAdminAlert();
         }
