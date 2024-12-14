@@ -12,9 +12,11 @@ import android.os.Build;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.os.Vibrator;
+
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.app.NotificationCompat;
+
 import android.util.Log;
 import android.widget.Toast;
 
@@ -23,7 +25,7 @@ import android.widget.Toast;
  * Created by akiel on 3/15/17.
  */
 
-public class ShakerService extends Service  {
+public class ShakerService extends Service {
 
 
     private Shaker mShaker;
@@ -34,7 +36,7 @@ public class ShakerService extends Service  {
         super.onCreate();
         Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
         v.vibrate(100);
-        mDevicePolicyManager = (DevicePolicyManager)getSystemService(
+        mDevicePolicyManager = (DevicePolicyManager) getSystemService(
                 Context.DEVICE_POLICY_SERVICE);
     }
 
@@ -46,7 +48,7 @@ public class ShakerService extends Service  {
 
             @Override
             public void onShake() {
-                Toast.makeText(getApplicationContext(),"here",Toast.LENGTH_SHORT);
+                Toast.makeText(getApplicationContext(), "here", Toast.LENGTH_SHORT);
                 PowerManager pm = (PowerManager) getApplicationContext().getSystemService(Context.POWER_SERVICE);
                 if (pm.isScreenOn()) {
                     Vibrator v = (Vibrator) getApplicationContext().getSystemService(Context.VIBRATOR_SERVICE);
@@ -74,7 +76,6 @@ public class ShakerService extends Service  {
         super.onDestroy();
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private String createNotificationChannel(String channelId, String channelName) {
         NotificationChannel chan = new NotificationChannel(channelId,
                 channelName, NotificationManager.IMPORTANCE_NONE);
@@ -84,7 +85,6 @@ public class ShakerService extends Service  {
         return channelId;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
     public void notifyit() {
         /*
          * Este método asegura que el servicio permanece en el área de notificación
@@ -93,7 +93,7 @@ public class ShakerService extends Service  {
         i.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP
                 | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-        PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
+        PendingIntent pi = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_IMMUTABLE);
         String notificationChannel = createNotificationChannel("shakeitoff", "shakeitoff");
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, notificationChannel);
 

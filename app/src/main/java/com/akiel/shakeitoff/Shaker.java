@@ -16,15 +16,15 @@ public class Shaker implements SensorListener {
     private float mLastX = -1.0f, mLastY = -1.0f, mLastZ = -1.0f;
     private long mLastTime;
     private OnShakeListener mShakeListener;
-    private Context mContext;
+    private final Context mContext;
     private int mShakeCount = 0;
     private long mLastShake;
     private long mLastForce;
-    private SharedPreferences preferences;
+    private final SharedPreferences preferences;
 
     public Shaker(Context context) {
         mContext = context;
-        preferences = context.getSharedPreferences("shakeitoff", context.MODE_PRIVATE);
+        preferences = context.getSharedPreferences("shakeitoff", Context.MODE_PRIVATE);
         resume();
     }
 
@@ -74,7 +74,7 @@ public class Shaker implements SensorListener {
                     FORCE_THRESHOLD = BASE_FORCE_THRESHOLD * 4;
                     break;
                 case 1:
-                    FORCE_THRESHOLD = (int) Math.round(BASE_FORCE_THRESHOLD * 2);
+                    FORCE_THRESHOLD = Math.round(BASE_FORCE_THRESHOLD * 2);
                     break;
             }
 

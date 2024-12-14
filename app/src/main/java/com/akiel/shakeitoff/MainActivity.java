@@ -10,6 +10,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SwitchCompat;
+
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
@@ -25,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
     private static final String description = "Administration Permission needed to lock your screen";
     private DevicePolicyManager mDevicePolicyManager;
     private ComponentName mComponentName;
-    private Switch aswitch;
+    private SwitchCompat aswitch;
     private SeekBar seekbar;
     private SharedPreferences preferences;
 
@@ -50,13 +52,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Objects.requireNonNull(getSupportActionBar()).hide();
 
-        aswitch = (Switch) findViewById(R.id.switch2);
+        aswitch = findViewById(R.id.switch2);
         aswitch.setChecked(isMyServiceRunning(getApplicationContext()));
 
         preferences = getSharedPreferences("shakeitoff", MODE_PRIVATE);
         final SharedPreferences.Editor preferencesEditor = preferences.edit();
 
-        seekbar = (SeekBar) findViewById(R.id.seekBar);
+        seekbar = findViewById(R.id.seekBar);
         seekbar.setProgress(preferences.getInt("sensitivity", 2));
         seekbar.setEnabled(!isMyServiceRunning(getApplicationContext()));
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -139,6 +141,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == ADMIN_INTENT) {
             if (resultCode == RESULT_OK) {
                 if (isMyServiceRunning(getApplicationContext())) {

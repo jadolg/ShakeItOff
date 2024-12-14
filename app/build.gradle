@@ -1,14 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 30
+    compileSdk 34
     defaultConfig {
         applicationId "com.akiel.shakeitoff"
         minSdkVersion 26
-        targetSdkVersion 30
-        versionCode 9
-        versionName '1.9'
+        targetSdk 34
+        versionCode 10
+        versionName '1.10'
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
+        namespace "com.akiel.shakeitoff"
     }
     buildTypes {
         release {
@@ -21,6 +22,6 @@ android {
 }
 
 dependencies {
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
-    implementation 'com.google.android.material:material:1.3.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.2.0'
+    implementation 'com.google.android.material:material:1.12.0'
 }
