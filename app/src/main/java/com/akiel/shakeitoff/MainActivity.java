@@ -15,7 +15,6 @@ import androidx.appcompat.widget.SwitchCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.SeekBar;
-import android.widget.Switch;
 import android.widget.Toast;
 
 import java.util.Objects;
