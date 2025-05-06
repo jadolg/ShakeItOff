@@ -4,7 +4,6 @@ import android.app.ActivityManager;
 import android.app.admin.DevicePolicyManager;
 import android.content.ComponentName;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -119,19 +118,15 @@ public class MainActivity extends AppCompatActivity {
         builder.setMessage(getString(R.string.confirm_admin_text));
         builder.setCancelable(true)
                 .setPositiveButton(getString(R.string.ok),
-                        new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
-                                intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
-                                intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, description);
-                                startActivityForResult(intent, ADMIN_INTENT);
-                            }
+                        (dialog, id) -> {
+                            Intent intent = new Intent(DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN);
+                            intent.putExtra(DevicePolicyManager.EXTRA_DEVICE_ADMIN, mComponentName);
+                            intent.putExtra(DevicePolicyManager.EXTRA_ADD_EXPLANATION, description);
+                            startActivityForResult(intent, ADMIN_INTENT);
                         }).setNegativeButton(getString(R.string.cancel),
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        //hacer algo en el cancelar?
-                    }
-                });
+                        (dialog, id) -> {
+                            //hacer algo en el cancelar?
+                        });
 
         AlertDialog alert = builder.create();
         alert.setTitle(getString(R.string.confirm_admin));
